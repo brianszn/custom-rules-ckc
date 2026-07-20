@@ -1,0 +1,50 @@
+# =========================================================
+# REGRAS GENÉRICAS - LABORATÓRIO METASPLOITABLE 2
+# =========================================================
+
+# --- [ RECONHECIMENTO E SCAN ] ---
+
+alert icmp any any -> any any (msg:"[ALERTA] PING DETECTADO - Possível Varredura ICMP"; sid:1000001; rev:2;)
+
+alert tcp any any -> any any (msg:"[ALERTA] VARREDURA NMAP (SYN) DETECTADA"; flags:S; threshold:type both, track by_src, count 20, seconds 10; sid:1000002; rev:2;)
+
+# --- [ SERVIÇOS PADRÃO (TOP 1000 NMAP) ] ---
+
+alert tcp any any -> any 21 (msg:"[ALERTA] TENTATIVA DE ACESSO FTP (Porta 21)"; flow:to_server; sid:1000003; rev:1;)
+
+alert tcp any any -> any 22 (msg:"[ALERTA] TENTATIVA DE ACESSO SSH (Porta 22)"; flow:to_server; sid:1000004; rev:1;)
+
+alert tcp any any -> any 23 (msg:"[ALERTA] TENTATIVA DE ACESSO TELNET (Inseguro!)"; flow:to_server; sid:1000005; rev:1;)
+
+alert tcp any any -> any 80 (msg:"[ALERTA] TRÁFEGO HTTP DETECTADO (Porta 80)"; flow:to_server; sid:1000006; rev:1;)
+
+alert tcp any any -> any 445 (msg:"[ALERTA] TENTATIVA SMB/SAMBA - Exploração de Rede"; flow:to_server; sid:1000007; rev:1;)
+
+# --- [ BANCOS DE DADOS ] ---
+
+alert tcp any any -> any 3306 (msg:"[ALERTA] ACESSO AO MYSQL DETECTADO"; flow:to_server; sid:1000008; rev:1;)
+
+alert tcp any any -> any 5432 (msg:"[ALERTA] ACESSO AO POSTGRESQL DETECTADO"; flow:to_server; sid:1000009; rev:1;)
+
+# --- [ VULNERABILIDADES ESPECÍFICAS METASPLOITABLE ] ---
+
+# VSFTPD 2.3.4 Backdoor (O clássico :) do Metasploitable)
+alert tcp any any -> any 21 (msg:"[METASPLOIT] Tentativa de Exploração Backdoor VSFTPD 2.3.4"; content:":)"; sid:1000010; rev:1;)
+
+# UnrealIRCD Backdoor (Porta 6667)
+alert tcp any any -> any 6667 (msg:"[METASPLOIT] Tentativa de Comando no UnrealIRCD (Backdoor)"; content:"AB"; sid:1000011; rev:1;)
+
+# Shell Bind (Porta 1524 - Ingreslock)
+alert tcp any any -> any 1524 (msg:"[PERIGO] Acesso a Shell Bind detectado (Porta 1524)"; flow:to_server; sid:1000012; rev:1;)
+
+# Java RMI (Porta 1099)
+alert tcp any any -> any 1099 (msg:"[ALERTA] Tentativa de Exploração Java RMI"; flow:to_server; sid:1000013; rev:1;)
+
+# VNC (Porta 5900)
+alert tcp any any -> any 5900 (msg:"[ALERTA] Tentativa de Acesso Remoto VNC"; flow:to_server; sid:1000014; rev:1;)
+
+# --- [ WEB ATTACKS / EXFILTRAÇÃO ] ---
+
+alert tcp any any -> any 80 (msg:"[ATAQUE WEB] Tentativa de Path Traversal (/etc/passwd)"; content:"/etc/passwd"; nocase; sid:1000015; rev:1;)
+
+alert tcp any any -> any 80 (msg:"[ATAQUE WEB] Possível SQL Injection (UNION SELECT)"; content:"union select"; nocase; sid:1000016; rev:1;)
