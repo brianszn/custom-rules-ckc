@@ -13,8 +13,6 @@ O objetivo deste trabalho é avaliar a efetividade da metodologia Cyber Kill Cha
 ## 📂 Conteúdo do Repositório
 
 * **`suricata.rules`**: Conjunto de regras customizadas para a detecção de varreduras furtivas (Nmap), exploração de serviços (FTP) e assinaturas de exploits conhecidos (EternalBlue).
-* **Scripts de Automação**: Scripts em Python desenvolvidos para auxiliar nos testes de estresse de rede e simulação de anomalias volumétricas.
-* **Documentação da Topologia**: Detalhes da arquitetura de rede interligando os nós Debian (Atacante e Defesa), Metasploitable (Linux) e Metasploitable3 (Windows).
 
 ---
 
